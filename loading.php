@@ -58,16 +58,17 @@
         
 
         var loop = true;
+        var fileExist = true;
         var madeTable = 0;
         var xhr = new XMLHttpRequest();
+        var url = 'setup/progress.php';
         if (madeTable < 9)
-            xhr.open('GET', 'http://localhost/setup/index.php?db');
+            xhr.open('GET', 'setup/index.php?db');
         else if (loop)
-            xhr.open('GET', 'http://localhost/setup/index.php');
+            xhr.open('GET', 'setup/index.php');
         xhr.send();
 
-        setInterval(function() {
-                let url = 'setup/progress.php';
+        var interv = setInterval(function() {
                 var self = this;
                         $.ajax({
                             url         :   url,
@@ -75,8 +76,7 @@
                             type        :   "GET",
                             success     :   function( response )
                             {
-                                if (loop) {
-                                console.log(response);
+                                if (loop == true) {
                                 let req = JSON.parse(response);
                                 madeTable = req.dbRow;
                                 let nbHobby = req.nbHobby;
@@ -101,13 +101,13 @@
                                         document.getElementById('bdd').setAttribute('class', 'text-center text-success');
                                         document.getElementById('bdd').setAttribute('style', 'font-size: 13px;font-weight: bold;');
                                         document.getElementById('bdd').innerHTML = 'Base de données crée !';
-                                    if (nbHobby == progHobby) {
+                                    if (nbHobby <= progHobby) {
                                         document.getElementById('label_hobby').setAttribute('class', 'text-center text-success');
                                         document.getElementById('label_hobby').setAttribute('style', 'font-size: 13px;font-weight: bold;');
                                         document.getElementById('label_users').setAttribute('style', 'font-size: 13px;');
                                         document.getElementById('nbTags').setAttribute('style', 'font-size: 13px;');
                                     }
-                                    if (nbUsers == progUsers) {
+                                    if (nbUsers <= progUsers) {
                                         document.getElementById('label_users').setAttribute('class', 'text-center text-success');
                                         document.getElementById('label_users').setAttribute('style', 'font-size: 13px;font-weight: bold;');
                                         document.getElementById('nbTags').setAttribute('class', 'text-center text-success');
@@ -119,10 +119,15 @@
                                     }
                                 }
                             }
+                            else {
+                                let req = new XMLHttpRequest();
+                                req.open('GET', 'setup/index.php?del');
+                                req.send();
+                                clearInterval(interv);
+                            }
                             }
                         })
         }, 500);
-
     </script>
 </body>
 

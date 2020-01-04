@@ -4,6 +4,11 @@
 
 	session_start();
 
+	if (file_exists('setup/index.php')) {
+		header('Location: loading.php');
+		exit();
+	}
+
 	require_once('Class/Libft.php');
 
 	// IDENTIFIANTS POUR LA BASE DE DONNÉES, NE PAS TOUCHER ! //

